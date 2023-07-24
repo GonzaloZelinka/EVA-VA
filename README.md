@@ -32,9 +32,11 @@ $ pip install -r requirements.txt
 
 Download [Vosk small model](https://alphacephei.com/vosk/models) inside a folder called `model` in src/listener/model
 
-## Use Cases
+### Run the project
 
-- [ ] Create reminders
+```bash
+$ py main.py
+```
 
 ## Capabilities:
 
