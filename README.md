@@ -1,6 +1,6 @@
-# Personal Assistant Backend
+# EVA - Personal Assistant
 
-A personal assistant with help of AI. The goal is to have a module easy to use in different backend environments, like in a API.
+A personal assistant with help of AI.
 
 ### Create a python env
 
