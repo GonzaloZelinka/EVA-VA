@@ -3,7 +3,6 @@
 - [ ] Set the bases for langchain.
 - [ ] Set the different roles and templates for GPT-4/3.5:
   - [ ] Listener role (improve the text generated from Whisper) --> GPT-3.5.
-  - [ ] Summarization role --> GPT- 3.5.
   - [ ] Question and answer role --> GPT-4.
   - [ ] Search role (related to summarization and Q&A) --> GPT-3.5.
   - [ ] Code generation role --> GPT-4.
