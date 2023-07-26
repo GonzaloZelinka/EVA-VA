@@ -15,18 +15,18 @@ from struct import pack
 class WhisperListener:
 
     """
-    This class is responsible for listening to the user's voice and
+    This class is responsible for _listening to the user's voice and
     sending it to the Whisper model for transcription.
 
     Returns:
         str: The transcription of the user's voice.
     """
 
-    def __init__(self, assist=None):
+    def __init__(self):
         self._vad = webrtcvad.Vad(1)
         self._pa = pyaudio.PyAudio()
         self._FORMAT = pyaudio.paInt16
-        self.__load_model()
+        self._load_model()
         self._stream = self._pa.open(
             format=self._FORMAT,
             channels=Config.CHANNELS,
@@ -36,10 +36,10 @@ class WhisperListener:
             frames_per_buffer=Config.CHUNK_SIZE,
         )
 
-        self.got_a_sentence = False
-        self.leave = False
+        self._got_a_sentence = False
+        self._leave = False
 
-    def __load_model(self):
+    def _load_model(self):
         print("\033[96mLoading Whisper Model..\033[0m", end="")
         if Config.DEVICE == "cpu":
             print("\033[93m (Warning: Using CPU, this will be slow!)\033[0m")
@@ -51,13 +51,13 @@ class WhisperListener:
         )
         print("\033[90m Whisper load complete.\033[0m\n")
 
-    def process(self):
+    def _process(self):
         print("\n\033[90mTranscribing..\033[0m")
         result = self._modelWhisper("dictate.wav")
         print("\033[92mTranscription complete.\033[0m\n")
         return result
 
-    def record_to_file(self, path, data, sample_width):
+    def _record_to_file(self, path, data, sample_width):
         data = pack("<" + ("h" * len(data)), *data)
         wf = wave.open(path, "wb")
         wf.setnchannels(1)
@@ -66,7 +66,7 @@ class WhisperListener:
         wf.writeframes(data)
         wf.close()
 
-    def normalize(self, snd_data):
+    def _normalize(self, snd_data):
         MAXIMUM = 32767
         times = float(MAXIMUM) / max(abs(i) for i in snd_data)
         r = array.array("h")
@@ -77,22 +77,22 @@ class WhisperListener:
     def _close_stream(self, start_point, raw_data):
         self._stream.stop_stream()
         print("* done recording")
-        self.got_a_sentence = False
+        self._got_a_sentence = False
 
         raw_data.reverse()
         for index in range(start_point):
             raw_data.pop()
         raw_data.reverse()
-        raw_data = self.normalize(raw_data)
-        self.record_to_file("dictate.wav", raw_data, 2)
+        raw_data = self._normalize(raw_data)
+        self._record_to_file("dictate.wav", raw_data, 2)
 
-    def handle_int(self, sig, chunk):
-        self.leave = True
-        self.got_a_sentence = True
+    def _handle_int(self, sig, chunk):
+        self._leave = True
+        self._got_a_sentence = True
 
-    def listen(self):
-        signal.signal(signal.SIGINT, self.handle_int)
-        while not self.leave:
+    def _listen(self):
+        signal.signal(signal.SIGINT, self._handle_int)
+        while not self._leave:
             ring_buffer = collections.deque(maxlen=Config.NUM_PADDING_CHUNKS)
             triggered = False
             ring_buffer_flags = [0] * Config.NUM_WINDOW_CHUNKS
@@ -106,11 +106,10 @@ class WhisperListener:
             print("Listening...")
             self._stream.start_stream()
 
-            while not self.got_a_sentence and not self.leave:
+            while not self._got_a_sentence and not self._leave:
                 chunk = self._stream.read(Config.CHUNK_SIZE)
                 raw_data.extend(array.array("h", chunk))
                 index += Config.CHUNK_SIZE
-                TimeUse = time.time() - StartTime
 
                 active = self._vad.is_speech(chunk, Config.RATE)
                 sys.stdout.write("1" if active else "_")
@@ -137,19 +136,19 @@ class WhisperListener:
                     if num_unvoiced > 0.90 * Config.NUM_WINDOW_CHUNKS_END:
                         sys.stdout.write(" Close ")
                         triggered = False
-                        self.got_a_sentence = True
+                        self._got_a_sentence = True
 
                 sys.stdout.flush()
 
             sys.stdout.write("\n")
             self._close_stream(start_point, raw_data)
-            self.leave = True
+            self._leave = True
 
         self._stream.close()
-        return self.process()
+        return self._process()
 
     def execute(self):
-        response = self.listen()
+        response = self._listen()
         if os.path.exists("dictate.wav"):
             os.remove("dictate.wav")
         return response

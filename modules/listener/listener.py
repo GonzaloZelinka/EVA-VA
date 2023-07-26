@@ -1,17 +1,16 @@
-from .whisperListener import WhisperListener
-from .wordListener import WakeWordListener
+from .whisper_listener import WhisperListener
+from .word_listener import WakeWordListener
 
 
 class Listener:
     def __init__(self):
-        self.mainListener = WhisperListener()
-        self.wwListener = WakeWordListener()
-        self.activateWhisper = False
-        self.response = None
+        self._mainListener = WhisperListener()
+        self._wwListener = WakeWordListener()
+        self._activateWhisper = False
+        self._response = None
 
     def execute(self):
-        self.activateWhisper = self.wwListener.execute()
-        if self.activateWhisper == True:
-            self.response = self.mainListener.execute()
-            print("RESPONSE: ", self.response)
-        return self.response
+        self._activateWhisper = self._wwListener.execute()
+        if self._activateWhisper == True:
+            self._response = self._mainListener.execute()
+        return self._response
