@@ -1,14 +1,21 @@
 # Next Steps:
 
-- [ ] Set the bases for langchain.
+- [x] Set the bases for langchain.
 - [ ] Set the different roles and templates for GPT-4/3.5:
-  - [ ] Listener role (improve the text generated from Whisper) --> GPT-3.5.
-  - [ ] Question and answer role --> GPT-4.
-  - [ ] Search role (related to summarization and Q&A) --> GPT-3.5.
-  - [ ] Code generation role --> GPT-4.
+  - [x] Request Enhanced role (improve the text generated from Whisper) --> GPT-3.5.
+  - [ ] Question and answer role ([search in google the question if we need](https://python.langchain.com/docs/modules/agents/agent_types/chat_conversation_agent)) --> GPT-3.5.
+    - Tools:
+      - [ ] [Google Search API](https://developers.google.com/custom-search/v1/overview).
+      - [ ] [Wikipedia API](https://pypi.org/project/wikipedia/).
+      - [ ] [Wolfram Alpha API](https://pypi.org/project/wolframalpha/).
   - [ ] Reminder/Todo/Meeting role --> GPT-3.5.
+    - Tools:
+      - [ ] [Google Calendar API](https://developers.google.com/calendar/overview).
   - [ ] Add DataBase Manager Role.
-  
-- [ ] Set OpenAI API.
+    - Tools:
+      - [ ] [Redis](https://redis.io/).
+      - [ ] [MongoDB](https://www.mongodb.com/).
+  - [ ] Code generation role --> GPT-4.
+- [x] Set OpenAI API.
 - [ ] Add a talker logic.
-- [ ] Add a database to store the user request and responses(memory langchain).
+- [ ] Add a database to store the user request and responses(memory langchain and Database Role).

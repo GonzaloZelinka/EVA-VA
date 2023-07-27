@@ -27,10 +27,10 @@ class FactoryRole:
 
     def create_concrete_role(self, req_text: str) -> tuple[CreatorRole, Dict[str, str]]:
         requestEnhanced = self._langChainBrain.improve_listening(req_text)
-        creator = self._creators.get(requestEnhanced.req_type)
+        creator = self._creators.get(requestEnhanced["req_type"])
         if not creator:
             raise ValueError(requestEnhanced)
-        return creator, requestEnhanced
+        return creator, requestEnhanced["req_text"]
 
 
 class MeetingCreator(CreatorRole):
