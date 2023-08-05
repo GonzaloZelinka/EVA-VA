@@ -1,25 +1,27 @@
 from modules.listener.listener import Listener
-from modules.roles.roles import FactoryRole, MeetingCreator, Q_ACreator
+from modules.roles.chains_creator import (
+    FactoryChain,
+    ChainMeetingCreator,
+    ChainQ_ACreator,
+)
 
 
 class ExecutionController:
     def __init__(self):
         # self._listener = Listener()
-        self._role_factory = FactoryRole()
-        self._role_factory.reg_concrete_role("meeting", MeetingCreator())
-        self._role_factory.reg_concrete_role("q_a", Q_ACreator())
+        self._role_factory = FactoryChain()
+        self._role_factory.reg_concrete_chain("meeting", ChainMeetingCreator())
+        self._role_factory.reg_concrete_chain("q_a", ChainQ_ACreator())
 
     def _listen(self):
         return self._listener.execute()
 
-    def execute(self):
-        request = self._listen()
-        role, requestEnhanced = self._role_factory.create_concrete_role(request)
-        # model_response = role.generate_response(requestEnhanced.req_text)
-        # print(model_response)
-        # TODO: send model_response to the talker
-
-    def testing(self, text):
-        role, requestEnhanced = self._role_factory.create_concrete_role(text)
-        model_response = role.factory_model_response().process_req()
-        print(model_response, requestEnhanced)
+    def execute(self, request):
+        # request = self._listen()
+        (
+            chain_creator,
+            requestEnhanced,
+        ) = self._role_factory.create_concrete_chain_creator(request)
+        print(requestEnhanced)
+        response = chain_creator.execute(requestEnhanced["req_text"])
+        print(response)
