@@ -15,9 +15,9 @@ load_dotenv()
 
 
 class ChainCreator(ABC):
-    def __init__(self):
-        self.__chain = None
-        self.__llm = ChatOpenAI(temperature=0.1)
+    # def __init__(self):
+    #     self.__chain = None
+    #     self.__llm = ChatOpenAI(temperature=0.1)
 
     def execute(self, improved_req) -> str:
         chain_type = self._identify_subtask(improved_req)
@@ -36,7 +36,7 @@ class ChainCreator(ABC):
 class FactoryChain:
     def __init__(self):
         self.__creators = {}
-        self.__llm = ChatOpenAI(temperature=0.1)
+        self.__llm = ChatOpenAI(temperature=0.3)
 
     def reg_concrete_chain(self, request_type: str, creator: ChainCreator):
         self.__creators[request_type] = creator
@@ -76,24 +76,7 @@ class ChainMeetingCreator(ChainCreator):
 
 class ChainQ_ACreator(ChainCreator):
     def _identify_subtask(self, improved_req):
-        # For now we only have one subtask, so we don't need to identify it (model response)
-        # prompt = create_prompt(
-        #     system_prompt=human_q_a_template,
-        #     human_prompt=human_improve_listening_template,
-        #     input_variables=["req_text"],
-        # )
-        # functions_chain = (
-        #     prompt
-        #     | self.__llm.bind(
-        #         function_call={"name": "req_improved"}, functions=[improved_req_fn]
-        #     )
-        #     | JsonOutputFunctionsParser()
-        # )
-        # response = functions_chain.invoke()
-        return "model_response"
+        return "Q_A"
 
     def _factory_chain(self, chain_type) -> ChainGeneral:
-        if chain_type == "model_response":
-            return Q_AChain()
-        else:
-            raise ValueError("Unknown chain type")
+        return Q_AChain()

@@ -9,9 +9,9 @@ from modules.roles.chains_creator import (
 class ExecutionController:
     def __init__(self):
         # self._listener = Listener()
-        self._role_factory = FactoryChain()
-        self._role_factory.reg_concrete_chain("meeting", ChainMeetingCreator())
-        self._role_factory.reg_concrete_chain("q_a", ChainQ_ACreator())
+        self.__chain_factory = FactoryChain()
+        self.__chain_factory.reg_concrete_chain("meeting", ChainMeetingCreator())
+        self.__chain_factory.reg_concrete_chain("q_a", ChainQ_ACreator())
 
     def _listen(self):
         return self._listener.execute()
@@ -21,7 +21,7 @@ class ExecutionController:
         (
             chain_creator,
             requestEnhanced,
-        ) = self._role_factory.create_concrete_chain_creator(request)
+        ) = self.__chain_factory.create_concrete_chain_creator(request)
         print(requestEnhanced)
         response = chain_creator.execute(requestEnhanced["req_text"])
         print(response)
