@@ -10,7 +10,7 @@ improved_req_fn = {
             },
             "req_type": {
                 "type": "string",
-                "description": "The type of request generated for the LLM. the possible values are: meeting and q_a",
+                "description": "The type of request generated for the LLM. the possible values are: q_a and undefined",
             },
         },
         "required": ["req_text", "req_type"],
