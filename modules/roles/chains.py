@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from langchain.chat_models import ChatOpenAI
+from langchain.chains import LLMMathChain
 from langchain.schema.output_parser import StrOutputParser
 from langchain.agents import initialize_agent, Tool, AgentType, load_tools
 from modules.functions.create_prompt import create_prompt
@@ -33,3 +34,12 @@ class Q_AChain(ChainGeneral):
         chain = prompt | self.__llm | StrOutputParser()
         response = chain.invoke({"output": request})
         return response
+
+
+class MathChain(ChainGeneral):
+    def __init__(self, llm: ChatOpenAI):
+        self.__llm = LLMMathChain.from_llm(llm)
+
+    def execute_chain(self, request: str):
+        response = self.__llm.run(request)
+        return response.replace("Answer: ", "")

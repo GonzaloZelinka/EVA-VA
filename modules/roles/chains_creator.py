@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from .chains import ChainGeneral, Q_AChain
+from .chains import ChainGeneral, MathChain, Q_AChain
 from typing import Dict
 from modules.roles_templates.improve_listen_template import (
     human_improve_listening_template,
@@ -92,6 +92,6 @@ class ChainQ_ACreator(ChainCreator):
     def _factory_chain(self, chain_type, llm) -> ChainGeneral:
         print("chain_type", chain_type)
         if chain_type == "math":
-            return "TODO"
+            return MathChain(llm)
         elif chain_type == "common":
             return Q_AChain(llm)
