@@ -9,10 +9,6 @@ from modules.roles_templates.q_a_template import (
     human_subtask_identification_template,
     system_subtask_identification_template,
 )
-from modules.roles_templates.end_template import (
-    human_end_identification_template,
-    system_end_identification_template,
-)
 from modules.openai_functions.request_improve import improved_req_fn
 from modules.openai_functions.subtask_q_a import get_subtask_q_a
 from modules.functions.create_prompt import create_prompt
