@@ -13,7 +13,6 @@ from struct import pack
 
 
 class WhisperListener:
-
     """
     This class is responsible for _listening to the user's voice and
     sending it to the Whisper model for transcription.
@@ -78,7 +77,6 @@ class WhisperListener:
         self._stream.stop_stream()
         print("* done recording")
         self._got_a_sentence = False
-
         raw_data.reverse()
         for index in range(start_point):
             raw_data.pop()
@@ -102,7 +100,6 @@ class WhisperListener:
             raw_data = array.array("h")
             index = 0
             start_point = 0
-            StartTime = time.time()
             print("Listening...")
             self._stream.start_stream()
 
@@ -144,11 +141,14 @@ class WhisperListener:
             self._close_stream(start_point, raw_data)
             self._leave = True
 
-        self._stream.close()
+        # in some time we will need to restart all the functionality.
+        # self._stream.close()
+        self._leave = False
         return self._process()
 
     def execute(self):
         response = self._listen()
         if os.path.exists("dictate.wav"):
+            print("Removing old dictate.wav")
             os.remove("dictate.wav")
         return response

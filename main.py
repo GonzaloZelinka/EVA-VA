@@ -1,11 +1,14 @@
 from modules.executionController.execution_controller import ExecutionController
-
+from modules.listener.word_listener import WakeWordListener
+import time
 
 if __name__ == "__main__":
     execution_controller = ExecutionController()
-    # execution_controller.execute()
-    # execution_controller.execute("Que es la orientacion a objetos")
-    # execution_controller.execute(
-    #     "¿Quién es la novia de Leonardo DiCaprio? ¿Cuál es su edad elevada a la potencia de 0,43?"
-    # )
-    execution_controller.execute("Cuanto es 24 por 2?")
+    ww_listener = WakeWordListener()
+    while True:
+        activate_whisper = ww_listener.execute()
+        if activate_whisper:
+            execution_controller.execute()
+            print("FINISHED EXECUTION, WAITING FOR WAKE WORD...")
+            activate_whisper = False
+        time.sleep(0.20)
