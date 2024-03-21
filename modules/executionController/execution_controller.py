@@ -1,8 +1,5 @@
 from modules.listener.whisper_listener import WhisperListener
-from modules.roles.chains_creator import (
-    FactoryChain,
-    ChainQ_ACreator,
-)
+from modules.roles.chains_creator import FactoryChain, ChainQ_ACreator, ChainEndCreator
 from langchain.chat_models import ChatOpenAI
 import time
 
@@ -13,6 +10,7 @@ class ExecutionController:
         self.__chain_factory = FactoryChain()
         self.__llm = ChatOpenAI(temperature=0.3)
         self.__chain_factory.reg_concrete_chain("q_a", ChainQ_ACreator())
+        self.__chain_factory.reg_concrete_chain("finish", ChainEndCreator())
 
     def _listen(self):
         return self._listener.execute()

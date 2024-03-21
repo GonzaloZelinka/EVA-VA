@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from .chains import ChainGeneral, MathChain, Q_AChain
+from .chains import ChainGeneral, MathChain, Q_AChain, EndChain
 from typing import Dict
 from modules.roles_templates.improve_listen_template import (
     human_improve_listening_template,
@@ -8,6 +8,10 @@ from modules.roles_templates.improve_listen_template import (
 from modules.roles_templates.q_a_template import (
     human_subtask_identification_template,
     system_subtask_identification_template,
+)
+from modules.roles_templates.end_template import (
+    human_end_identification_template,
+    system_end_identification_template,
 )
 from modules.openai_functions.request_improve import improved_req_fn
 from modules.openai_functions.subtask_q_a import get_subtask_q_a
@@ -21,7 +25,6 @@ load_dotenv()
 
 
 class ChainCreator(ABC):
-    # DEPRECATED, implement with agents and tools the subtasks work --> https://python.langchain.com/docs/modules/agents/agent_types/openai_assistants
     def execute(self, improved_req, llm: ChatOpenAI) -> str:
         chain_type = self._identify_subtask(improved_req, llm)
         self.__chain = self._factory_chain(chain_type, llm)
@@ -66,7 +69,6 @@ class FactoryChain:
 
 
 class ChainQ_ACreator(ChainCreator):
-    # TODO: maybe the best way to do this is with agents and tools --> use the math tool to do a operation and the common tool to do a question and answer
     def _identify_subtask(self, improved_req, llm):
         prompt = create_prompt(
             system_prompt=system_subtask_identification_template,
