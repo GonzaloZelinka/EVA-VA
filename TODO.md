@@ -1,10 +1,12 @@
 # Next Steps:
 
+- [ ] Create a API format, to receive and audio, decodify, sent to the model, and return the response in text, initially. After we can create a response in audio.
+
 - [x] Set the bases for langchain.
 - [ ] Set the different roles and templates for GPT-4/3.5:
-  - [x] Request Enhanced role (improve the text generated from Whisper) --> GPT-3.5.
+  - [x] Request Enhanced role (improve the text generated from Whisper) --> GPT-4.
   - [ ] Question and answer role.
-    - [x] General response from GPT-3.5.
+    - [x] General response from GPT-4.
     - [x] [Search in google the question if we need](https://serper.dev/dashboard).
     - [x] Implement LLMMathChain (math questions).
     - [ ] Specific questions about concepts ([use wikipedia API](https://pypi.org/project/wikipedia/)).
@@ -18,7 +20,7 @@
   - [ ] Code generation role --> GPT-4.
   - [ ] Send messages role --> GPT-3.5.
 - [x] Set OpenAI API.
-- [ ] Add a talker logic.
+- [x] Add a talker logic.
 - [ ] Add a database to store the user request and responses (memory langchain and Database Role).
 
 ## Notes:

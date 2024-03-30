@@ -1,17 +1,17 @@
 from abc import ABC, abstractmethod
-from .chains import ChainGeneral, MathChain, Q_AChain, EndChain
+from .chains import ChainGeneral, MathChain, Q_AChain
 from typing import Dict
-from modules.roles_templates.improve_listen_template import (
+from roles_templates.improve_listen_template import (
     human_improve_listening_template,
     system_improve_listening_template,
 )
-from modules.roles_templates.q_a_template import (
+from roles_templates.q_a_template import (
     human_subtask_identification_template,
     system_subtask_identification_template,
 )
-from modules.openai_functions.request_improve import improved_req_fn
-from modules.openai_functions.subtask_q_a import get_subtask_q_a
-from modules.functions.create_prompt import create_prompt
+from openai_functions.request_improve import improved_req_fn
+from openai_functions.subtask_q_a import get_subtask_q_a
+from functions.create_prompt import create_prompt
 from langchain.chat_models import ChatOpenAI
 from langchain.output_parsers.openai_functions import JsonOutputFunctionsParser
 from langchain.schema.output_parser import StrOutputParser
@@ -33,6 +33,14 @@ class ChainCreator(ABC):
     @abstractmethod
     def _identify_subtask(self, improved_req):
         pass
+
+
+class DummyChainCreator(ChainCreator):
+    def _identify_subtask(self, improved_req, llm):
+        return None
+
+    def _factory_chain(self, chain_type, llm) -> ChainGeneral:
+        return None
 
 
 class FactoryChain:
@@ -58,9 +66,14 @@ class FactoryChain:
             | JsonOutputFunctionsParser()
         )
         request_enhanced = functions_chain.invoke({"output": req_text})
+        print("request_enhanced", request_enhanced)
         creator = self.__creators.get(request_enhanced["req_type"])
         if not creator:
-            raise ValueError(request_enhanced)
+            print(
+                'Does not exist "req_type" in creators: ', request_enhanced["req_type"]
+            )
+            print("Ignores the request: ", request_enhanced["req_text"])
+            return None, None
         return creator, request_enhanced
 
 

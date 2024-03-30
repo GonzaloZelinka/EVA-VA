@@ -1,4 +1,8 @@
 .env
 .venv
 __pycache__
-modules/listener/model/
+modules_deprecated/listener/model/
+.vscode
+voices
+api/uploads
+m
