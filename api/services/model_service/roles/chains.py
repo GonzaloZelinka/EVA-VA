@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import LLMMathChain
 from langchain.schema.output_parser import StrOutputParser
-from functions.create_prompt import create_prompt
-from roles_templates.q_a_template import (
+from api.services.model_service.functions.create_prompt import create_prompt
+from api.services.model_service.roles_templates.q_a_template import (
     human_q_a_template,
     system_q_a_template,
 )

@@ -1,20 +1,19 @@
 from abc import ABC, abstractmethod
 from .chains import ChainGeneral, MathChain, Q_AChain
 from typing import Dict
-from roles_templates.improve_listen_template import (
+from api.services.model_service.roles_templates.improve_listen_template import (
     human_improve_listening_template,
     system_improve_listening_template,
 )
-from roles_templates.q_a_template import (
+from api.services.model_service.roles_templates.q_a_template import (
     human_subtask_identification_template,
     system_subtask_identification_template,
 )
-from openai_functions.request_improve import improved_req_fn
-from openai_functions.subtask_q_a import get_subtask_q_a
-from functions.create_prompt import create_prompt
+from api.services.model_service.openai_functions.request_improve import improved_req_fn
+from api.services.model_service.openai_functions.subtask_q_a import get_subtask_q_a
+from api.services.model_service.functions.create_prompt import create_prompt
 from langchain.chat_models import ChatOpenAI
 from langchain.output_parsers.openai_functions import JsonOutputFunctionsParser
-from langchain.schema.output_parser import StrOutputParser
 from dotenv import load_dotenv
 
 load_dotenv()
