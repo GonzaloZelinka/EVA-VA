@@ -3,6 +3,7 @@ from flask import Flask
 from api.services.audio_service import AudioService
 from api.services.model_service import ModelService
 from .routes.audio_routes import audio_bp
+from .routes.model_routes import model_bp
 
 
 def create_app(config_filename="config"):
@@ -18,5 +19,6 @@ def create_app(config_filename="config"):
 
     # Register Blueprints
     app.register_blueprint(audio_bp, url_prefix="/audio")
+    app.register_blueprint(model_bp, url_prefix="/model")
 
     return app
