@@ -1,16 +1,23 @@
 from abc import ABC, abstractmethod
-from .chains import ChainGeneral, MathChain, Q_AChain
+from .chains import ChainGeneral, CreateToDoChain, MathChain, Q_AChain
 from typing import Dict
 from api.services.model_service.roles_templates.improve_listen_template import (
     human_improve_listening_template,
     system_improve_listening_template,
 )
 from api.services.model_service.roles_templates.q_a_template import (
-    human_subtask_identification_template,
-    system_subtask_identification_template,
+    qa_system_subtask_template,
+    qa_human_subtask_template,
+)
+from api.services.model_service.roles_templates.todo_template import (
+    todo_system_subtask_template,
+    todo_human_subtask_template,
 )
 from api.services.model_service.openai_functions.request_improve import improved_req_fn
-from api.services.model_service.openai_functions.subtask_q_a import get_subtask_q_a
+from api.services.model_service.openai_functions.get_subtask import (
+    get_subtask_q_a,
+    get_subtask_todo,
+)
 from api.services.model_service.functions.create_prompt import create_prompt
 from langchain.chat_models import ChatOpenAI
 from langchain.output_parsers.openai_functions import JsonOutputFunctionsParser
@@ -32,14 +39,6 @@ class ChainCreator(ABC):
     @abstractmethod
     def _identify_subtask(self, improved_req):
         pass
-
-
-class DummyChainCreator(ChainCreator):
-    def _identify_subtask(self, improved_req, llm):
-        return None
-
-    def _factory_chain(self, chain_type, llm) -> ChainGeneral:
-        return None
 
 
 class FactoryChain:
@@ -79,25 +78,23 @@ class FactoryChain:
 class ChainQ_ACreator(ChainCreator):
     def _identify_subtask(self, improved_req, llm):
         prompt = create_prompt(
-            system_prompt=system_subtask_identification_template,
-            human_prompt=human_subtask_identification_template,
+            system_prompt=qa_system_subtask_template,
+            human_prompt=qa_human_subtask_template,
             input_variables=["output"],
         )
         functions_chain = (
             prompt
             | llm.bind(
-                function_call={"name": "get_subtask"}, functions=[get_subtask_q_a]
+                function_call={"name": "get_subtask_q_a"}, functions=[get_subtask_q_a]
             )
             | JsonOutputFunctionsParser()
         )
 
         subtask = functions_chain.invoke({"output": improved_req}).get("req_type")
-        if subtask == "math":
-            return "math"
-        elif subtask == "common":
-            return "common"
-        else:
+        if subtask != "math" and subtask != "common":
             print(' "subtask" is not math or common', subtask)
+            return None
+        return subtask
 
     def _factory_chain(self, chain_type, llm) -> ChainGeneral:
         print("chain_type", chain_type)
@@ -105,3 +102,54 @@ class ChainQ_ACreator(ChainCreator):
             return MathChain(llm)
         elif chain_type == "common":
             return Q_AChain(llm)
+
+
+class DummyChainCreator(ChainCreator):
+    def _identify_subtask(self, improved_req, llm):
+        return None
+
+    def _factory_chain(self, chain_type, llm) -> ChainGeneral:
+        return None
+
+
+class ChainToDoCreator(ChainCreator):
+
+    def _identify_subtask(self, improved_req, llm):
+        prompt = create_prompt(
+            system_prompt=todo_system_subtask_template,
+            human_prompt=todo_human_subtask_template,
+            input_variables=["output"],
+        )
+        functions_chain = (
+            prompt
+            | llm.bind(
+                function_call={"name": "get_subtask_todo"},
+                functions=[get_subtask_todo],
+            )
+            | JsonOutputFunctionsParser()
+        )
+
+        subtask = functions_chain.invoke({"output": improved_req}).get("req_type")
+        if (
+            subtask != "create"
+            and subtask != "delete"
+            and subtask != "update"
+            and subtask != "get"
+        ):
+            print(' "subtask" is not create, delete, update or get', subtask)
+            return None
+
+        return subtask
+
+    def _factory_chain(self, chain_type, llm) -> ChainGeneral:
+        print("chain_type", chain_type)
+        if chain_type == "create":
+            return CreateToDoChain(llm)
+        # Should be done using a search chain
+        # elif chain_type == "delete":
+        #     return DeleteToDoChain(llm)
+        # elif chain_type == "update":
+        #     return UpdateToDoChain(llm)
+        # elif chain_type == "get":
+        #     return GetToDoChain(llm)
+        return None

@@ -10,7 +10,8 @@ improved_req_fn = {
             },
             "req_type": {
                 "type": "string",
-                "description": "The type of request generated for the LLM. the possible values are: q_a and undefined",
+                "enum": ["q_a", "todo", "undefined"],
+                "description": "The type of request generated for the LLM",
             },
         },
         "required": ["req_text", "req_type"],

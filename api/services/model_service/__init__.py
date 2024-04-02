@@ -1,5 +1,6 @@
 from api.services.model_service.roles.chains_creator import (
     ChainQ_ACreator,
+    ChainToDoCreator,
     FactoryChain,
 )
 from langchain.chat_models import ChatOpenAI
@@ -12,6 +13,7 @@ class ModelService:
         self.__chain_factory = FactoryChain()
         self.__llm = ChatOpenAI(temperature=0.3, model_name="gpt-4")
         self.__chain_factory.reg_concrete_chain("q_a", ChainQ_ACreator())
+        self.__chain_factory.reg_concrete_chain("todo", ChainToDoCreator())
         print("\033[90m Model Service load complete.\033[0m\n")
 
     def execute(self, request):
