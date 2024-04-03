@@ -1,4 +1,4 @@
-import datetime
+from datetime import timezone, datetime
 
 
 todo_system_subtask_template = """You are a helpful assistant.
@@ -15,7 +15,7 @@ get: When the request is to get the list of tasks in the ToDo list.
 For example: "What tasks do I have for today?", "Show me the tasks for tomorrow", "What do I have to do today?", "What are the tasks for this week?".
 """
 
-todo_human_subtask_template = f"""Current date: {datetime.datetime.now().strftime("%d/%m/%Y %H:%M")}
+todo_human_subtask_template = f"""Current date: {datetime.now(timezone.utc).strftime("%m/%d/%Y %H:%M")}
 Request: {{output}}"""
 
 
@@ -25,7 +25,8 @@ You will receive a request from another artificial intelligence model.
 For example: "Create a new task "Buy milk" for today", "Add the task "Buy milk" for tomorrow", "Remember to buy milk", "Write down "Buy milk" for today".
 The request will be a JSON object with two properties:
 - task: A string with a short description of the task to do.
-- date: A string with the date when the task must be done.
-For example: {{"task": "Buy milk", "date": "01/01/2022 20:00"}}.
+- date: A string with the date and time when the task must be done. Always in the format mm/dd/yyyy hh:mm.
+For example: {{"task": "Buy milk", "date": "01/25/2022 20:00"}}.
 You will receive the current date, that you can use to calculate the date for the task.
+If you can not calculate the hours and minutes, you can use the current time that you received.
 """

@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+
+from api.utils.database_error import ToDatabaseException
 from .chains import ChainGeneral, CreateToDoChain, MathChain, Q_AChain
 from typing import Dict
 from api.services.model_service.roles_templates.improve_listen_template import (
@@ -64,14 +66,10 @@ class FactoryChain:
             | JsonOutputFunctionsParser()
         )
         request_enhanced = functions_chain.invoke({"output": req_text})
-        print("request_enhanced", request_enhanced)
         creator = self.__creators.get(request_enhanced["req_type"])
         if not creator:
-            print(
-                'Does not exist "req_type" in creators: ', request_enhanced["req_type"]
-            )
-            print("Ignores the request: ", request_enhanced["req_text"])
-            return None, None
+            msg = f"Does not exist creator for request type: {request_enhanced['req_type']}"
+            raise ToDatabaseException(msg, msg, 400)
         return creator, request_enhanced
 
 

@@ -14,6 +14,8 @@
   - [ ] [Add a calendar API](https://developers.google.com/calendar/overview).
   - [ ] Add create, edit, delete, search [custom Tools](https://python.langchain.com/docs/modules/agents/tools/custom_tools).
   - [ ] Use vector database to search for the team members to add in the meeting.
+- [x] ErrorChainCreator.
+  - [x] handle error Schema.
 - [x] Set OpenAI API.
 - [x] Add a talker logic.
 - [ ] Add a database to store the user request and responses (memory langchain and Database Role).
