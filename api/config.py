@@ -4,3 +4,4 @@ class Config(object):
     UPLOAD_FOLDER = "api/uploads"
     MAX_CONTENT_PATH = 10000000  # to set max upload size
     DEVICE = "cuda:0"  # Device to use for inference, "cuda:0" or "cpu"
+    USER_ID = "35EluJEmLre5AohdmixB1MfOZVk2"  # User ID for Firestore

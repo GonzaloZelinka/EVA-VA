@@ -5,4 +5,4 @@ modules_deprecated/listener/model/
 .vscode
 voices
 api/uploads
-m
+firebase_privateKey.json
